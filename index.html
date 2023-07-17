@@ -1,36 +1,132 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <title>ETL Pipeline for IoT System</title>
+  <title>Data Pipeline Flowchart</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    .node {
+      stroke: #000;
+      stroke-width: 1.5px;
+    }
+
+    .link {
+      fill: none;
+      stroke: #000;
+      stroke-width: 1.5px;
+    }
+
+    .nodetext {
+      font: 10px sans-serif;
+    }
+
+    .nodetext a {
+      fill: blue;  // Make links blue
+      text-decoration: underline;  // Underline links
+    }
+  </style>
 </head>
 <body>
-    <h1>ETL Pipeline for IoT System</h1>
-    <div class="pipeline">
-        <div class="stage">
-            <h2>Data Source Extraction</h2>
-            <p>IOT devices (sensors, equipment)</p>
-        </div>
-        <div class="stage">
-            <h2>Ingestion</h2>
-            <p>IoT Cloud Platform</p>
-        </div>
-        <div class="stage">
-            <h2>Storage</h2>
-            <p>MQTT Broker, Kafka</p>
-        </div>
-        <div class="stage">
-            <h2>Processing</h2>
-            <p>Forward Data API</p>
-        </div>
-        <div class="stage">
-            <h2>Data Warehouse</h2>
-            <p>Storage NoSQL Database MongoDB</p>
-        </div>
-        <div class="stage">
-            <h2>Alerts & Notifications</h2>
-            <p>Other Cloud Services, Data Integration ETL Services, Data Transformation and Airflow Orchestration, RDS, Power BI</p>
-        </div>
-    </div>
+  <script>
+    var width = 1250,
+        height = 950;
+
+    var nodes = [
+      {name: "Data Source Extraction", url: "https://example.com"}, 
+      {name: "Ingestion", url: "https://example.com"}, 
+      {name: "Storage", url: "https://example.com"}, 
+      {name: "Processing", url: "https://example.com"},
+      {name: "Data Warehouse", url: "https://example.com"}, 
+      {name: "Alerts & Notifications", url: "https://example.com"}, 
+      {name: "IOT Devices", url: "https://example.com"}, 
+      {name: "IOT Cloud Platform", url: "https://example.com"}, 
+      {name: "MQTT Broker", url: "https://example.com"}, 
+      {name: "Kafka", url: "https://example.com"}, 
+      {name: "Forward Data API", url: "https://example.com"}, 
+      {name: "Storage NoSQL Database MongoDB", url: "https://example.com"}, 
+      {name: "Other Cloud Services", url: "https://example.com"}, 
+      {name: "Data Integration ETL Services", url: "https://example.com"}, 
+      {name: "Data Transformation and Airflow Orchestration", url: "https://example.com"}, 
+      {name: "RDS", url: "https://example.com"}, 
+      {name: "Power BI", url: "https://example.com"}
+    ];
+
+    var links = [
+      {source: 0, target: 1}, {source: 1, target: 2}, {source: 2, target: 3}, {source: 3, target: 4}, 
+      {source: 4, target: 5}, {source: 6, target: 1}, {source: 7, target: 2}, {source: 8, target: 3}, 
+      {source: 9, target: 4}, {source: 10, target: 5}, {source: 11, target: 1}, {source: 12, target: 2}, 
+      {source: 13, target: 3}, {source: 14, target: 4}, {source: 15, target: 5}, {source: 16, target: 5}
+    ];
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var force = d3.forceSimulation()
+        .force("link", d3.forceLink().distance(150))
+        .force("charge", d3.forceManyBody().strength(-350))
+        .force("center", d3.forceCenter(width / 2, height / 2));
+
+    var link = svg.selectAll(".link")
+        .data(links)
+        .enter().append("line")
+        .attr("class", "link");
+
+    var node = svg.selectAll(".node")
+        .data(nodes)
+        .enter().append("g")
+
+    var circle = node.append("circle")
+        .attr("class", "node")
+        .attr("r", 10)
+        .style("fill", function(d) { // added this line
+          var mainCategories = ["IOT Devices", "Ingestion", "Storage", "Processing", "Data Warehouse", "Alerts & Notifications"];
+          if (mainCategories.includes(d.name)) {
+            return "red";  // Make the circle color red
+          }
+          return "black";  // Default circle color
+        })
+        .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", ".35em")
+        .attr("class", "nodetext")
+        .append("a")
+        .attr("href", function(d) { return d.url }) // using href to set link
+        .text(function(d) { return d.name });
+
+    force.nodes(nodes);
+    force.force("link").links(links);
+
+    force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+
+    function dragstarted(event, d) {
+      if (!event.active) force.alpha
+      force.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) force.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+  </script>
 </body>
 </html>
