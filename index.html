@@ -3,34 +3,132 @@
 <head>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <title>ETL Pipeline for IoT System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            position: relative;
+            margin-right: 20px;
+            width: 50%;
+        }
+
+        .pipeline:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            border-left: 1px solid black;
+        }
+
+        .stage {
+            border: 1px solid black;
+            padding: 20px;
+            margin: 10px;
+            width: 25%;  /* Change this line */
+            text-align: center;
+            background-color: white;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        #preview {
+            position: fixed;
+            right: 10px;
+            top: 10px;
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            max-width: 750px;
+            max-height: 750px;
+            overflow: auto;
+        }
+
+        #preview iframe {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
     <h1>ETL Pipeline for IoT System</h1>
     <div class="pipeline">
         <div class="stage">
             <h2>Data Source Extraction</h2>
-            <p>IOT devices (sensors, equipment)</p>
+            <p><a href="https://www.example.com" class="preview">IOT devices (sensors, equipment)</a></p>
         </div>
         <div class="stage">
             <h2>Ingestion</h2>
-            <p>IoT Cloud Platform</p>
+            <p><a href="https://www.example.com" class="preview">IoT Cloud Platform</a></p>
         </div>
         <div class="stage">
             <h2>Storage</h2>
-            <p>MQTT Broker, Kafka</p>
+            <p><a href="https://www.example.com" class="preview">MQTT Broker, Kafka</a></p>
         </div>
         <div class="stage">
             <h2>Processing</h2>
-            <p>Forward Data API</p>
+            <p><a href="https://www.example.com" class="preview">Forward Data API</a></p>
         </div>
         <div class="stage">
             <h2>Data Warehouse</h2>
-            <p>Storage NoSQL Database MongoDB</p>
+            <p><a href="https://www.example.com" class="preview">Storage NoSQL Database MongoDB</a></p>
         </div>
         <div class="stage">
             <h2>Alerts & Notifications</h2>
-            <p>Other Cloud Services, Data Integration ETL Services, Data Transformation and Airflow Orchestration, RDS, Power BI</p>
+            <p><a href="https://www.example.com" class="preview">Other Cloud Services, Data Integration ETL Services, Data Transformation and Airflow Orchestration, RDS, Power BI</a></p>
         </div>
     </div>
+    <div id="preview"></div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+    </div>
+    <div id="preview"></div>
+    <script>
+        document.querySelectorAll('.preview').forEach((link) => {
+            link.addEventListener('mouseover', function(e) {
+                // Create an iframe to embed the webpage
+                var iframe = document.createElement('iframe');
+                iframe.src = this.href;
+                iframe.width = '100%';
+                iframe.height = '100%';
+
+                // Clear the preview box and append the iframe
+                var previewBox = document.getElementById('preview');
+                while (previewBox.firstChild) {
+                    previewBox.firstChild.remove();
+                }
+                previewBox.appendChild(iframe);
+
+                // Show the preview box
+                previewBox.style.display = 'block';
+            });
+
+            link.addEventListener('mouseout', function(e) {
+                // Hide the preview box and remove the iframe
+                var previewBox = document.getElementById('preview');
+                previewBox.style.display = 'none';
+                while (previewBox.firstChild) {
+                    previewBox.firstChild.remove();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
